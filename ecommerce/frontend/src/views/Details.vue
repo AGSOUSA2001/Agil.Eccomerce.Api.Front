@@ -1,7 +1,7 @@
 <template>
   <div class="details">
     <div>
-      <span style="color: black; font-size: 30px;"><b>Listado de productos</b></span>
+      <span style="color: black; font-size: 30px;"><b>Detalles del producto: {{product.id}}</b></span>
       <template>
         <div>
           <section class="wrapper">
@@ -17,7 +17,7 @@
                 </p>
                 <div style="display: flex;">
                   <router-link :to="{name: 'Home'}" style="text-decoration: none; width: 45%"><b-button style="width: 100%; background-color: #319EB9; color: black"><b>Back to Home</b></b-button></router-link>
-                  <b-button @click="$router.push('/cart')" style="width: 45%; margin-left: 11%; background-color: #60B931; color: black"><b>Add to cart</b></b-button>
+                  <b-button @click="addToCart" style="width: 45%; margin-left: 11%; background-color: #60B931; color: black"><b>Add to cart</b></b-button>
                 </div>
               </li>
             </ul>
@@ -51,6 +51,12 @@ export default {
       fetch(api_url("/products/" + id))
       .then((result) => result.json())
       .then((data) => (this.product = data));
+    },
+    addToCart() {
+      fetch(api_url("/cart/", {
+        method: "POST",
+        body: JSON.stringify({"productId":0,"quantity":1}),
+        }))
     }
   }
 };
