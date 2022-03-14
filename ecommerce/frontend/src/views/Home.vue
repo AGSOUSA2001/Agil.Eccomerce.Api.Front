@@ -16,8 +16,8 @@
                   <em style="color: black; font-size: 17px">${{ product.price }}</em>
                 </p>
                 <div style="display: flex;">
-                  <b-button style="width: 45%; background-color: #319EB9;"><router-link :to="{name: 'details', params: {id: product.id}}" style="text-decoration: none; color: black"><b>Details</b></router-link></b-button>
-                  <b-button @click="$router.push('/cart')" style="width: 45%; margin-left: 10%; color: black; background-color: #60B931;"><b>Add to cart</b></b-button>
+                  <router-link :to="{name: 'Details', params: {id: product.id}}" style="text-decoration: none; width: 45%"><b-button style="width: 100%; background-color: #319EB9; color: black"><b>Details</b></b-button></router-link>
+                  <b-button style="width: 45%; margin-left: 11%; background-color: #60B931; color: black"><b>Add to cart</b></b-button>
                 </div>
               </li>
             </ul>
