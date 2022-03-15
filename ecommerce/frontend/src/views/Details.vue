@@ -1,9 +1,9 @@
 <template>
   <div class="details">
     <div>
-      <span style="color: black; font-size: 30px"
-        ><b>Detalles del producto: {{ product.id }}</b></span
-      >
+      <span style="color: black; font-size: 30px">
+        <b>Detalles del producto: {{ product.id }}</b>
+      </span>
       <template>
         <div>
           <section class="wrapper">
@@ -17,37 +17,26 @@
                 "
                 class="products__product"
               >
-                <img
-                  class="product-image"
-                  :src="product.mainImage"
-                  alt=""
-                  width="100%"
-                />
-                <p
-                  class="product-title"
-                  style="margin-top: 40px; font-size: 20px; color: black"
-                >
+                <img class="product-image" :src="product.mainImage" alt width="100%" />
+                <p class="product-title" style="margin-top: 40px; font-size: 20px; color: black">
                   <b>{{ product.name }}</b>
                 </p>
                 <p>
-                  <em style="color: black; font-size: 17px"
-                    >${{ product.price }}</em
-                  >
+                  <em style="color: black; font-size: 17px">${{ product.price }}</em>
                 </p>
                 <p>${{ product.description }}</p>
                 <div style="display: flex">
-                  <router-link
-                    :to="{ name: 'Home' }"
-                    style="text-decoration: none; width: 45%"
-                    ><b-button
+                  <router-link :to="{ name: 'Home' }" style="text-decoration: none; width: 45%">
+                    <b-button
                       style="
                         width: 100%;
                         background-color: #319eb9;
                         color: black;
                       "
-                      ><b>Back to Home</b></b-button
-                    ></router-link
-                  >
+                    >
+                      <b>Back to Home</b>
+                    </b-button>
+                  </router-link>
                   <b-button
                     @click="addtoCart"
                     style="
@@ -56,8 +45,9 @@
                       background-color: #60b931;
                       color: black;
                     "
-                    ><b>Add to cart</b></b-button
                   >
+                    <b>Add to cart</b>
+                  </b-button>
                 </div>
               </li>
             </ul>

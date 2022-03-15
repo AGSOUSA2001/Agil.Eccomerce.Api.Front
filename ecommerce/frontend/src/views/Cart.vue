@@ -1,14 +1,16 @@
 <template>
-  <div class="home">
+  <div class="cart">
     <div>
-      <span style="color: black; font-size: 30px"><b>Carrito</b></span>
+      <span style="color: black; font-size: 30px">
+        <b>Carrito</b>
+      </span>
       <template>
         <div>
           <section class="wrapper">
             <ul
               style="
                 display: inline-grid;
-                justify-content: center;
+                justify-content: space-between;
                 align-items: center;
                 margin-top: 70px;
               "
@@ -18,9 +20,9 @@
                 :key="product.id"
                 style="
                   border: black 3px solid;
-                  width: 1050px;
+                  width: 1070px;
                   display: flex;
-                  justify-content: center;
+                  justify-content: space-between;
                   align-items: center;
                   padding-top: 15px;
                   margin-bottom: 40px;
@@ -40,16 +42,15 @@
                     width: 40px;
                     background-color: white;
                     color: black;
-                    margin-top: -15px;
                     font-size: 20px;
                     margin-top: -15px;
                     margin-right: 80px;
-                    
                   "
-                  ><b>🗑</b></b-button
                 >
+                  <b>🗑</b>
+                </b-button>
                 <p>{{ product.productName }}</p>
-                <p style="padding: 0px 200px">{{ product.productPrice }}</p>
+                <p style="padding: 0px 200px">{{ product.productPrice }} €</p>
                 <p style="padding-right: 100px">{{ product.quantity }}</p>
                 <b-button
                   @click="
@@ -68,8 +69,9 @@
                     color: black;
                     margin-top: -15px;
                   "
-                  ><b>+</b></b-button
                 >
+                  <b>+</b>
+                </b-button>
                 <b-button
                   @click="
                     degradeQuantity(
@@ -81,30 +83,41 @@
                     )
                   "
                   style="
+                    margin-right: 15px;
                     width: 40px;
                     background-color: #f04646;
                     color: black;
                     margin-top: -15px;
                   "
-                  ><b>-</b></b-button
                 >
-                <p>{{ product.total }}</p>
+                  <b>-</b>
+                </b-button>
+                <div style="margin-right: 5px;">
+                  <p>{{totalProduct(product.quantity, product.productPrice)}} €</p>
+                </div>
               </li>
             </ul>
           </section>
         </div>
-        <b-button
-          @click="submitOrder()"
-          style="
-            margin-right: 10px;
+        <div
+          style="border: black 3px solid; width: 100px; align-items: center; padding-top: 15px; margin-left: 1400px;"
+        >
+          <p>Total: {{totalCart}} €</p>
+        </div>
+        <router-link :to="{ name: 'Orders' }" style="text-decoration: none; width: 45%">
+          <b-button
+            @click="submitOrder()"
+            style="
             background-color: #60b931;
             color: black;
             margin-top: 5px;
             width: 300px;
             height: 50px;
           "
-          ><b>Checkout</b></b-button
-        >
+          >
+            <b>Checkout</b>
+          </b-button>
+        </router-link>
       </template>
     </div>
   </div>
@@ -203,6 +216,59 @@ export default {
       fetch(api_url("/cart/"))
         .then((result) => result.json())
         .then((data) => (this.products = data));
+    },
+    totalProduct(productPrice, quantity) {
+      return parseFloat(productPrice) * parseFloat(quantity);
+    },
+    submitOrder() {
+      for (let i = 0; i < this.products.length; i++) {
+        fetch(api_url("/orders/"), {
+          method: "POST",
+          body: JSON.stringify({
+            productId: this.products[i].id,
+            productName: this.products[i].productName,
+            quantity: this.products[i].quantity,
+            productPrice: this.products[i].productPrice,
+            totalProduct:
+              this.products[i].quantity * this.products[i].productPrice,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+            // 'Content-Type': 'application/x-www-form-urlencoded',
+          },
+        });
+      }
+      fetch(api_url("/orders/"), {
+        method: "POST",
+        body: JSON.stringify({
+          totalOrder: this.totalCart,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+          // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      });
+      for(let i = 0; i <= this.products.length+1; i++){
+        fetch(api_url("/cart/" + i), {
+          method: "DELETE",
+          body: JSON.stringify({}),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+      }
+    },
+  },
+  computed: {
+    totalCart: function () {
+      let sum = 0;
+      for (let i = 0; i < this.products.length; i++) {
+        sum +=
+          parseFloat(this.products[i].productPrice) *
+          parseFloat(this.products[i].quantity);
+      }
+
+      return sum;
     },
   },
 };

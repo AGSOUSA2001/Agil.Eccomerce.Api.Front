@@ -2,10 +2,8 @@
   <div id="app">
     <div id="nav">
       <router-link to="/" style="text-decoration: none; font-size: 18px">Home</router-link> |
-      <router-link to="/details" style="text-decoration: none; font-size: 18px">Details</router-link> |
       <router-link to="/cart" style="text-decoration: none; font-size: 25px">🛒</router-link>
     </div>
-    <!--<h1 v-if="isMock">Working with MOCK data</h1>-->
     <router-view/>
   </div>
 </template>

@@ -1,9 +1,9 @@
 <template>
   <div class="home">
     <div>
-      <span style="color: black; font-size: 30px"
-        ><b>Listado de productos</b></span
-      >
+      <span style="color: black; font-size: 30px">
+        <b>Listado de productos</b>
+      </span>
       <template>
         <div>
           <section class="wrapper">
@@ -19,36 +19,28 @@
                 :key="product.id"
                 class="products__product"
               >
-                <img
-                  class="product-image"
-                  :src="product.mainImage"
-                  alt=""
-                  width="100%"
-                />
-                <p
-                  class="product-title"
-                  style="margin-top: 40px; font-size: 20px; color: black"
-                >
+                <img class="product-image" :src="product.mainImage" alt width="100%" />
+                <p class="product-title" style="margin-top: 40px; font-size: 20px; color: black">
                   <b>{{ product.name }}</b>
                 </p>
                 <p>
-                  <em style="color: black; font-size: 17px"
-                    >${{ product.price }}</em
-                  >
+                  <em style="color: black; font-size: 17px">${{ product.price }}</em>
                 </p>
                 <div style="display: flex">
                   <router-link
                     :to="{ name: 'Details', params: { id: product.id } }"
                     style="text-decoration: none; width: 45%"
-                    ><b-button
+                  >
+                    <b-button
                       style="
                         width: 100%;
                         background-color: #319eb9;
                         color: black;
                       "
-                      ><b>Details</b></b-button
-                    ></router-link
-                  >
+                    >
+                      <b>Details</b>
+                    </b-button>
+                  </router-link>
                   <b-button
                     @click="addtoCart(product.id, product.name, product.price)"
                     style="
@@ -57,8 +49,9 @@
                       background-color: #60b931;
                       color: black;
                     "
-                    ><b>Add to cart</b></b-button
                   >
+                    <b>Add to cart</b>
+                  </b-button>
                 </div>
               </li>
             </ul>
