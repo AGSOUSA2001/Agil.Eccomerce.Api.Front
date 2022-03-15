@@ -1,24 +1,71 @@
 <template>
   <div class="home">
     <div>
-      <span style="color: black; font-size: 30px;"><b>Carrito</b></span>
+      <span style="color: black; font-size: 30px"><b>Carrito</b></span>
       <template>
         <div>
           <section class="wrapper">
-            <ul class="products">
-              <li style="border: black 3px solid; width: 450px; display:inline-grid; margin:20px;"
+            <ul
+              style="
+                display: inline-grid;
+                justify-content: center;
+                align-items: center;
+                margin-top: 70px;
+              "
+            >
+              <li
                 v-for="product in products"
                 :key="product.id"
-                class="products__product">
-                <img class="product-image" :src="product.mainImage" alt="" width="100%"/>
-                <p class="product-title" style="margin-top: 40px; font-size: 20px; color: black;"><b>{{ product.name }}</b></p>
-                <p>
-                  <em style="color: black; font-size: 17px">${{ product.price }}</em>
-                </p>
-                <div style="display: flex;">
-                  <router-link :to="{name: 'Details', params: {id: product.id}}" style="text-decoration: none; width: 45%"><b-button style="width: 100%; background-color: #319EB9; color: black"><b>Details</b></b-button></router-link>
-                  <b-button style="width: 45%; margin-left: 11%; background-color: #60B931; color: black"><b>Add to cart</b></b-button>
-                </div>
+                style="
+                  border: black 3px solid;
+                  width: 850px;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  padding-top: 15px;
+                  margin-bottom: 40px;
+                "
+              >
+                <p>{{ product.productName }}</p>
+                <p style="padding: 0px 200px">{{ product.productPrice }}</p>
+                <p style="padding-right: 100px">{{ product.quantity }}</p>
+                <b-button
+                  @click="
+                    upgradeQuantity(
+                      product.id,
+                      product.quantity,
+                      product.productId,
+                      product.productName,
+                      product.productPrice
+                    )
+                  "
+                  style="
+                    margin-right: 10px;
+                    width: 40px;
+                    background-color: #46a0f0;
+                    color: black;
+                    margin-top: -15px;
+                  "
+                  ><b>+</b></b-button
+                >
+                <b-button
+                  @click="
+                    degradeQuantity(
+                      product.id,
+                      product.quantity,
+                      product.productId,
+                      product.productName,
+                      product.productPrice
+                    )
+                  "
+                  style="
+                    width: 40px;
+                    background-color: #f04646;
+                    color: black;
+                    margin-top: -15px;
+                  "
+                  ><b>-</b></b-button
+                >
               </li>
             </ul>
           </section>
@@ -35,12 +82,11 @@
 import api_url from "../utils/api";
 
 export default {
-  name: 'Home',
+  name: "Cart",
 
-  components: {
-  },
+  components: {},
   created() {
-    fetch(api_url("/products"))
+    fetch(api_url("/cart/"))
       .then((result) => result.json())
       .then((data) => (this.products = data));
   },
@@ -49,5 +95,62 @@ export default {
       products: [],
     };
   },
-}
+  methods: {
+    upgradeQuantity(id, quantity, productId, productName, productPrice) {
+      fetch(api_url("/cart/" + id), {
+        method: "PUT",
+        body: JSON.stringify({
+          productId: productId,
+          productName: productName,
+          quantity: quantity + 1,
+          productPrice: productPrice,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+          // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      });
+      fetch(api_url("/cart/"))
+        .then((result) => result.json())
+        .then((data) => (this.products = data));
+    },
+    degradeQuantity(id, quantity, productId, productName, productPrice) {
+      if (quantity > 1) {
+        fetch(api_url("/cart/" + id), {
+          method: "PUT",
+          body: JSON.stringify({
+            productId: productId,
+            productName: productName,
+            quantity: quantity - 1,
+            productPrice: productPrice,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+            // 'Content-Type': 'application/x-www-form-urlencoded',
+          },
+        });
+        fetch(api_url("/cart/"))
+          .then((result) => result.json())
+          .then((data) => (this.products = data));
+      } else {
+        fetch(api_url("/cart/" + id), {
+          method: "DELETE",
+          body: JSON.stringify({
+            productId: productId,
+            productName: productName,
+            quantity: quantity,
+            productPrice: productPrice,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+            // 'Content-Type': 'application/x-www-form-urlencoded',
+          },
+        });
+        fetch(api_url("/cart/"))
+          .then((result) => result.json())
+          .then((data) => (this.products = data));
+      }
+    },
+  },
+};
 </script>
