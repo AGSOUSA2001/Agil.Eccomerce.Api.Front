@@ -1,23 +1,57 @@
 <template>
   <div class="home">
     <div>
-      <span style="color: black; font-size: 30px;"><b>Listado de productos</b></span>
+      <span style="color: black; font-size: 30px">
+        <b>Listado de productos</b>
+      </span>
       <template>
         <div>
           <section class="wrapper">
             <ul class="products">
-              <li style="border: black 3px solid; width: 450px; display:inline-grid; margin:20px;"
+              <li
+                style="
+                  border: black 3px solid;
+                  width: 450px;
+                  display: inline-grid;
+                  margin: 20px;
+                "
                 v-for="product in products"
                 :key="product.id"
-                class="products__product">
-                <img class="product-image" :src="product.mainImage" alt="" width="100%"/>
-                <p class="product-title" style="margin-top: 40px; font-size: 20px; color: black;"><b>{{ product.name }}</b></p>
+                class="products__product"
+              >
+                <img class="product-image" :src="product.mainImage" alt width="100%" />
+                <p class="product-title" style="margin-top: 40px; font-size: 20px; color: black">
+                  <b>{{ product.name }}</b>
+                </p>
                 <p>
                   <em style="color: black; font-size: 17px">${{ product.price }}</em>
                 </p>
-                <div style="display: flex;">
-                  <b-button style="width: 45%; background-color: #319EB9;"><router-link :to="{name: 'details', params: {id: product.id}}" style="text-decoration: none; color: black"><b>Details</b></router-link></b-button>
-                  <b-button @click="$router.push('/cart')" style="width: 45%; margin-left: 10%; color: black; background-color: #60B931;"><b>Add to cart</b></b-button>
+                <div style="display: flex">
+                  <router-link
+                    :to="{ name: 'Details', params: { id: product.id } }"
+                    style="text-decoration: none; width: 45%"
+                  >
+                    <b-button
+                      style="
+                        width: 100%;
+                        background-color: #319eb9;
+                        color: black;
+                      "
+                    >
+                      <b>Details</b>
+                    </b-button>
+                  </router-link>
+                  <b-button
+                    @click="addtoCart(product.id, product.name, product.price)"
+                    style="
+                      width: 45%;
+                      margin-left: 11%;
+                      background-color: #60b931;
+                      color: black;
+                    "
+                  >
+                    <b>Add to cart</b>
+                  </b-button>
                 </div>
               </li>
             </ul>
@@ -35,10 +69,9 @@
 import api_url from "../utils/api";
 
 export default {
-  name: 'Home',
+  name: "Home",
 
-  components: {
-  },
+  components: {},
   created() {
     fetch(api_url("/products"))
       .then((result) => result.json())
@@ -49,5 +82,22 @@ export default {
       products: [],
     };
   },
-}
+  methods: {
+    addtoCart(productId, productName, productPrice) {
+      fetch(api_url("/cart/"), {
+        method: "POST",
+        body: JSON.stringify({
+          productId: productId,
+          productName: productName,
+          quantity: 1,
+          productPrice: productPrice,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+          // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      });
+    },
+  },
+};
 </script>
