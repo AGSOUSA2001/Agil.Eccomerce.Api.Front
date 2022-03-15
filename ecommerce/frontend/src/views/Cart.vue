@@ -18,7 +18,7 @@
                 :key="product.id"
                 style="
                   border: black 3px solid;
-                  width: 850px;
+                  width: 1050px;
                   display: flex;
                   justify-content: center;
                   align-items: center;
@@ -26,6 +26,28 @@
                   margin-bottom: 40px;
                 "
               >
+                <b-button
+                  @click="
+                    removeProduct(
+                      product.id,
+                      product.quantity,
+                      product.productId,
+                      product.productName,
+                      product.productPrice
+                    )
+                  "
+                  style="
+                    width: 40px;
+                    background-color: white;
+                    color: black;
+                    margin-top: -15px;
+                    font-size: 20px;
+                    margin-top: -15px;
+                    margin-right: 80px;
+                    
+                  "
+                  ><b>🗑</b></b-button
+                >
                 <p>{{ product.productName }}</p>
                 <p style="padding: 0px 200px">{{ product.productPrice }}</p>
                 <p style="padding-right: 100px">{{ product.quantity }}</p>
@@ -66,10 +88,23 @@
                   "
                   ><b>-</b></b-button
                 >
+                <p>{{ product.total }}</p>
               </li>
             </ul>
           </section>
         </div>
+        <b-button
+          @click="submitOrder()"
+          style="
+            margin-right: 10px;
+            background-color: #60b931;
+            color: black;
+            margin-top: 5px;
+            width: 300px;
+            height: 50px;
+          "
+          ><b>Checkout</b></b-button
+        >
       </template>
     </div>
   </div>
@@ -150,6 +185,24 @@ export default {
           .then((result) => result.json())
           .then((data) => (this.products = data));
       }
+    },
+    removeProduct(id, quantity, productId, productName, productPrice) {
+      fetch(api_url("/cart/" + id), {
+        method: "DELETE",
+        body: JSON.stringify({
+          productId: productId,
+          productName: productName,
+          quantity: quantity,
+          productPrice: productPrice,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+          // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      });
+      fetch(api_url("/cart/"))
+        .then((result) => result.json())
+        .then((data) => (this.products = data));
     },
   },
 };
